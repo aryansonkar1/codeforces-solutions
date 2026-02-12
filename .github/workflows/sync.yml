@@ -45,4 +45,6 @@ jobs:
           git commit -m "Auto Sync Codeforces Solutions"
         fi
 
-        git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main
+        git fetch origin main
+        git reset --soft origin/main
+        git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main --force
