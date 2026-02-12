@@ -2,7 +2,7 @@ import requests
 import os
 import re
 
-HANDLE = "aryansonkar1"   # <-- replace with your real Codeforces handle
+HANDLE = "Aryansonkar1"   # <-- replace with your real Codeforces handle
 
 url = f"https://codeforces.com/api/user.status?handle={HANDLE}&count=1000"
 response = requests.get(url).json()
