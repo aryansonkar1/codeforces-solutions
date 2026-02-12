@@ -31,10 +31,18 @@ jobs:
       run: python fetch_cf.py
 
     - name: Commit and Push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git config user.name "Aryan Sonkar"
-        git config user.email "sonkararyan000@gmail.com"
+        git config --global user.name "Aryan Sonkar"
+        git config --global user.email "sonkararyan000@gmail.com"
+
         git add .
-        git diff --quiet && git diff --staged --quiet || git commit -m "Auto Sync Codeforces Solutions"
-        git pull origin main --rebase
-        git push origin main
+
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Auto Sync Codeforces Solutions"
+        fi
+
+        git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main
