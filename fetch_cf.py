@@ -1,10 +1,10 @@
 import requests
 import os
-import re
+from datetime import datetime
 
-HANDLE = "Aryansonkar1"   # <-- replace with your real Codeforces handle
+HANDLE = "Aryansonkar1"
 
-url = f"https://codeforces.com/api/user.status?handle={HANDLE}&count=1000"
+url = f"https://codeforces.com/api/user.status?handle={HANDLE}&count=5000"
 response = requests.get(url).json()
 
 if response["status"] != "OK":
@@ -12,7 +12,8 @@ if response["status"] != "OK":
     exit()
 
 submissions = response["result"]
-solved = set()
+solved = {}
+max_rating = 0
 
 for sub in submissions:
     if sub.get("verdict") != "OK":
@@ -26,28 +27,38 @@ for sub in submissions:
     contest_id = problem["contestId"]
     index = problem["index"]
 
-    if (contest_id, index) in solved:
+    key = (contest_id, index)
+    if key in solved:
         continue
-    solved.add((contest_id, index))
 
     rating = problem["rating"]
-    name = problem["name"]
+    solved[key] = rating
+    max_rating = max(max_rating, rating)
 
-    clean_name = re.sub(r'[^\w\s-]', '', name).replace(" ", "_")
+total_solved = len(solved)
+last_sync = datetime.utcnow().strftime("%d %b %Y")
 
-    folder = str(rating)
-    os.makedirs(folder, exist_ok=True)
+readme_content = f"""
+# 🚀 Codeforces Solutions
 
-    filename = f"{folder}/{contest_id}_{index}_{clean_name}.cpp"
+This repository contains my accepted solutions from Codeforces, 
+automatically synchronized using Codeforces API and GitHub Actions.
 
-    if os.path.exists(filename):
-        continue
+The problems are categorized based on their difficulty rating 
+to maintain a clean and structured archive.
 
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(f"// Problem: {name}\n")
-        f.write(f"// Contest ID: {contest_id}\n")
-        f.write(f"// Rating: {rating}\n")
-        f.write(f"// Link: https://codeforces.com/contest/{contest_id}/problem/{index}\n\n")
-        f.write("#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n\n    return 0;\n}\n")
+---
 
-print("Sync completed successfully!")
+🟢 **Total Problems Solved:** {total_solved}  
+🔵 **Max Rating Solved:** {max_rating}  
+📅 **Last Sync:** {last_sync}
+
+---
+
+> Maintained by Aryan Sonkar
+"""
+
+with open("README.md", "w", encoding="utf-8") as f:
+    f.write(readme_content)
+
+print("README updated successfully!")
