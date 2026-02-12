@@ -16,7 +16,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        persist-credentials: true
         fetch-depth: 0
 
     - name: Setup Python
@@ -30,13 +30,10 @@ jobs:
     - name: Run Script
       run: python fetch_cf.py
 
-    - name: Commit and Push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Commit changes
       run: |
-        git config --global user.name "Aryan Sonkar"
-        git config --global user.email "sonkararyan000@gmail.com"
-
+        git config user.name "Aryan Sonkar"
+        git config user.email "sonkararyan000@gmail.com"
         git add .
 
         if git diff --staged --quiet; then
@@ -45,6 +42,5 @@ jobs:
           git commit -m "Auto Sync Codeforces Solutions"
         fi
 
-        git fetch origin main
-        git reset --soft origin/main
-        git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main --force
+    - name: Push changes
+      run: git push
