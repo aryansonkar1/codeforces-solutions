@@ -9,9 +9,9 @@ to maintain a clean and structured archive.
 
 ---
 
-🟢 **Total Problems Solved:** 62  
-🔵 **Max Rating Solved:** 1200  
-📅 **Last Sync:** 22 Jun 2026
+🟢 **Total Problems Solved:** 0  
+🔵 **Max Rating Solved:** 0  
+📅 **Last Sync:** 23 Jun 2026
 
 ---
 
